@@ -1,0 +1,12 @@
+node_modules/
+dist/
+venv/
+__pycache__/
+*.pyc
+*.db
+*.log
+.env
+.DS_Store
+_asset-review/
+_screenshots/
+frontend/src/assets/products/set-*/

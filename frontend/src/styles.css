@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #111412;
+  background: #fbfdfb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(234, 247, 238, 0.7) 0%, rgba(255, 255, 255, 0) 36rem),
+    #fbfdfb;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  min-width: 0;
+}
+
+.section-title {
+  @apply text-3xl font-semibold tracking-normal text-pure-black sm:text-4xl;
+}
+
+.section-kicker {
+  @apply mb-3 inline-flex rounded-full border border-pure-line bg-white px-4 py-2 text-sm font-semibold text-pure-green shadow-sm;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-pure-green px-6 py-3 text-sm font-semibold text-white shadow-card transition duration-300 hover:-translate-y-0.5 hover:bg-pure-black focus:outline-none focus:ring-4 focus:ring-pure-green/20;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-pure-line bg-white px-6 py-3 text-sm font-semibold text-pure-black shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-pure-green hover:text-pure-green focus:outline-none focus:ring-4 focus:ring-pure-green/10;
+}
