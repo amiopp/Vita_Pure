@@ -34,3 +34,16 @@ export function createWhatsAppOrderLink(productId, quantity = 1) {
   });
 }
 
+export function createWhatsAppCartOrderLink(items, customerName = "", address = "") {
+  return request("/api/orders/whatsapp-cart-link", {
+    method: "POST",
+    body: JSON.stringify({
+      items: items.map((item) => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+      })),
+      customer_name: customerName,
+      address,
+    }),
+  });
+}

@@ -57,8 +57,8 @@ Frontend runs at `http://localhost:5173`.
 - `GET /api/products/{product_id}`
 - `GET /api/categories`
 - `POST /api/orders/whatsapp-link`
+- `POST /api/orders/whatsapp-cart-link`
 
 ## Product Editing
 
 Edit product data in `backend/app/seed.py`. Product image filenames should match files in `frontend/src/assets/products/selected`.
-

@@ -1,4 +1,4 @@
-import { Menu, MessageCircle, X } from "lucide-react";
+import { Menu, MessageCircle, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
 
 import logo from "../assets/purevita-logo.jpg";
@@ -13,7 +13,7 @@ const links = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ cartCount = 0, onCartOpen }) {
   const [open, setOpen] = useState(false);
   const whatsappUrl = getWhatsAppUrl("Bonjour PUREVITA, je souhaite passer une commande.");
 
@@ -45,6 +45,15 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <button type="button" onClick={onCartOpen} className="btn-secondary px-5">
+            <ShoppingBag className="h-4 w-4" />
+            Panier
+            {cartCount > 0 && (
+              <span className="ml-1 rounded-full bg-pure-green px-2 py-0.5 text-xs font-semibold text-white">
+                {cartCount}
+              </span>
+            )}
+          </button>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary">
             <MessageCircle className="h-4 w-4" />
             Commander sur WhatsApp
@@ -84,6 +93,22 @@ export default function Navbar() {
               <MessageCircle className="h-4 w-4" />
               Commander sur WhatsApp
             </a>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                setOpen(false);
+                onCartOpen?.();
+              }}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Voir le panier
+              {cartCount > 0 && (
+                <span className="ml-1 rounded-full bg-pure-green px-2 py-0.5 text-xs font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       )}

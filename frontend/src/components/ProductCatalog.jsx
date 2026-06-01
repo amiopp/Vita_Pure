@@ -1,12 +1,11 @@
 import { AlertCircle, Leaf } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import { createWhatsAppOrderLink, getCategories, getProducts } from "../lib/api.js";
-import { getProductWhatsAppUrl } from "../lib/whatsapp.js";
+import { getCategories, getProducts } from "../lib/api.js";
 import CategoryFilter from "./CategoryFilter.jsx";
 import ProductCard from "./ProductCard.jsx";
 
-export default function ProductCatalog() {
+export default function ProductCatalog({ onAddToCart }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("Tous");
@@ -42,15 +41,6 @@ export default function ProductCatalog() {
 
   const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
 
-  async function handleOrder(product) {
-    try {
-      const result = await createWhatsAppOrderLink(product.id, 1);
-      window.open(result.whatsapp_url, "_blank", "noopener,noreferrer");
-    } catch (err) {
-      window.open(getProductWhatsAppUrl(product.name, 1), "_blank", "noopener,noreferrer");
-    }
-  }
-
   return (
     <section id="produits" className="bg-white py-16 sm:py-20">
       <div className="section-shell">
@@ -85,7 +75,7 @@ export default function ProductCatalog() {
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {featuredProducts.map((product) => (
-                <ProductCard key={`featured-${product.id}`} product={product} onOrder={handleOrder} compact />
+                <ProductCard key={`featured-${product.id}`} product={product} onAddToCart={onAddToCart} compact />
               ))}
             </div>
           </div>
@@ -100,7 +90,7 @@ export default function ProductCatalog() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onOrder={handleOrder} />
+              <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
             ))}
           </div>
         )}
@@ -108,4 +98,3 @@ export default function ProductCatalog() {
     </section>
   );
 }
-

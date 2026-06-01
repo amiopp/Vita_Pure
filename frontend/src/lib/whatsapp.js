@@ -18,3 +18,18 @@ export function getProductWhatsAppUrl(productName, quantity = 1) {
   return getWhatsAppUrl(buildProductMessage(productName, quantity));
 }
 
+export function buildCartMessage(items, customerName = "", address = "") {
+  const lines = items.map((item) => `- ${item.product.name} x ${item.quantity}`).join("\n");
+  const total = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+  return (
+    "Bonjour PUREVITA, je veux commander:\n" +
+    `${lines}\n` +
+    `Total estimé: ${total.toFixed(0)} MAD.\n` +
+    `Nom: ${customerName}. Adresse: ${address}.`
+  );
+}
+
+export function getCartWhatsAppUrl(items, customerName = "", address = "") {
+  return getWhatsAppUrl(buildCartMessage(items, customerName, address));
+}

@@ -22,7 +22,17 @@ class WhatsAppLinkRequest(BaseModel):
     address: str | None = None
 
 
+class CartItemIn(BaseModel):
+    product_id: int
+    quantity: int = Field(default=1, ge=1, le=99)
+
+
+class WhatsAppCartLinkRequest(BaseModel):
+    items: list[CartItemIn] = Field(min_length=1, max_length=50)
+    customer_name: str | None = None
+    address: str | None = None
+
+
 class WhatsAppLinkResponse(BaseModel):
     whatsapp_url: str
     message: str
-

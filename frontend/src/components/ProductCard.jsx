@@ -1,4 +1,4 @@
-import { MessageCircle, PackageCheck, PackageX, Star } from "lucide-react";
+import { PackageCheck, PackageX, ShoppingBag, Star } from "lucide-react";
 import { useState } from "react";
 
 import logo from "../assets/purevita-logo.jpg";
@@ -19,17 +19,14 @@ const priceFormatter = new Intl.NumberFormat("fr-MA", {
   maximumFractionDigits: 0,
 });
 
-export default function ProductCard({ product, onOrder, compact = false }) {
-  const [ordering, setOrdering] = useState(false);
+export default function ProductCard({ product, onAddToCart, compact = false }) {
+  const [added, setAdded] = useState(false);
 
-  async function handleOrder() {
-    if (!product.in_stock || ordering) return;
-    setOrdering(true);
-    try {
-      await onOrder(product);
-    } finally {
-      setOrdering(false);
-    }
+  function handleAddToCart() {
+    if (!product.in_stock) return;
+    onAddToCart(product);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
   }
 
   return (
@@ -68,16 +65,15 @@ export default function ProductCard({ product, onOrder, compact = false }) {
           <span className="text-lg font-semibold text-pure-black">{priceFormatter.format(product.price)}</span>
           <button
             type="button"
-            onClick={handleOrder}
-            disabled={!product.in_stock || ordering}
+            onClick={handleAddToCart}
+            disabled={!product.in_stock}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-pure-black px-5 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-pure-green disabled:cursor-not-allowed disabled:bg-pure-ink/35"
           >
-            <MessageCircle className="h-4 w-4" />
-            {ordering ? "Ouverture..." : "Commander"}
+            <ShoppingBag className="h-4 w-4" />
+            {added ? "Ajouté" : "Ajouter"}
           </button>
         </div>
       </div>
     </article>
   );
 }
-
