@@ -2,7 +2,6 @@ import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import logo from "../assets/purevita-logo.jpg";
-import { createWhatsAppCartOrderLink } from "../lib/api.js";
 import { getCartWhatsAppUrl } from "../lib/whatsapp.js";
 
 const imageModules = import.meta.glob("../assets/products/selected/*", {
@@ -24,25 +23,15 @@ const priceFormatter = new Intl.NumberFormat("fr-MA", {
 export default function CartDrawer({ isOpen, items, onClose, onQuantityChange, onRemove, onClear }) {
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
-  const [ordering, setOrdering] = useState(false);
 
   const total = useMemo(
     () => items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
     [items],
   );
 
-  async function handleOrderCart() {
-    if (items.length === 0 || ordering) return;
-    setOrdering(true);
-
-    try {
-      const result = await createWhatsAppCartOrderLink(items, customerName, address);
-      window.open(result.whatsapp_url, "_blank", "noopener,noreferrer");
-    } catch (err) {
-      window.open(getCartWhatsAppUrl(items, customerName, address), "_blank", "noopener,noreferrer");
-    } finally {
-      setOrdering(false);
-    }
+  function handleOrderCart() {
+    if (items.length === 0) return;
+    window.location.href = getCartWhatsAppUrl(items, customerName, address);
   }
 
   return (
@@ -172,11 +161,11 @@ export default function CartDrawer({ isOpen, items, onClose, onQuantityChange, o
             <button
               type="button"
               onClick={handleOrderCart}
-              disabled={items.length === 0 || ordering}
+              disabled={items.length === 0}
               className="btn-primary disabled:cursor-not-allowed disabled:bg-pure-ink/35"
             >
               <ShoppingBag className="h-4 w-4" />
-              {ordering ? "Préparation..." : "Commander le panier"}
+              Commander le panier
             </button>
             <button type="button" onClick={onClear} disabled={items.length === 0} className="btn-secondary">
               Vider
