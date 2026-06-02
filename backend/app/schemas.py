@@ -7,7 +7,7 @@ class ProductBase(BaseModel):
     category: str = Field(min_length=2, max_length=80)
     description: str = Field(min_length=5, max_length=500)
     price: float = Field(ge=0)
-    image_url: str = Field(min_length=1, max_length=1000)
+    image_url: str = Field(min_length=1, max_length=2_000_000)
     in_stock: bool = True
     featured: bool = False
 
@@ -22,7 +22,7 @@ class ProductUpdate(BaseModel):
     category: str | None = Field(default=None, min_length=2, max_length=80)
     description: str | None = Field(default=None, min_length=5, max_length=500)
     price: float | None = Field(default=None, ge=0)
-    image_url: str | None = Field(default=None, min_length=1, max_length=1000)
+    image_url: str | None = Field(default=None, min_length=1, max_length=2_000_000)
     in_stock: bool | None = None
     featured: bool | None = None
 

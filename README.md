@@ -79,7 +79,7 @@ Enter the admin key configured in Render:
 ADMIN_API_KEY=your-secure-admin-key
 ```
 
-The admin page lets you add, edit, search, delete, mark stock availability, and feature products. For new product images, use either an existing bundled image filename or an external image URL.
+The admin page lets you add, edit, search, delete, mark stock availability, and feature products. Product images can be selected from a local file picker; the frontend compresses them before saving. Existing bundled image filenames and external image URLs also work from the advanced image field.
 
 ## Product Editing
 

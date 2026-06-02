@@ -1,5 +1,6 @@
 import {
   CheckCircle2,
+  ImagePlus,
   Edit,
   Eye,
   EyeOff,
@@ -39,6 +40,36 @@ const priceFormatter = new Intl.NumberFormat("fr-MA", {
   currency: "MAD",
   maximumFractionDigits: 0,
 });
+
+function resizeImageFile(file) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("Le fichier doit être une image."));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const maxSize = 1100;
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const width = Math.round(image.width * scale);
+        const height = Math.round(image.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      image.onerror = () => reject(new Error("Impossible de lire cette image."));
+      image.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error("Impossible de lire ce fichier."));
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function AdminPage() {
   const [adminKey, setAdminKey] = useState(() => localStorage.getItem(ADMIN_KEY_STORAGE) || "");
@@ -114,6 +145,23 @@ export default function AdminPage() {
 
   function updateForm(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  async function handleImageFile(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setError("");
+    setSuccess("");
+    try {
+      const dataUrl = await resizeImageFile(file);
+      updateForm("image_url", dataUrl);
+      setSuccess("Image ajoutée. Elle sera enregistrée avec le produit.");
+    } catch (err) {
+      setError("Impossible d'ajouter cette image. Essayez une image JPG, PNG ou WebP.");
+    } finally {
+      event.target.value = "";
+    }
   }
 
   function startEdit(product) {
@@ -322,13 +370,29 @@ export default function AdminPage() {
                 step="1"
                 required
               />
-              <AdminInput
-                label="Image"
-                value={form.image_url}
-                onChange={(value) => updateForm("image_url", value)}
-                placeholder="nom-local.jpeg ou https://..."
-                required
-              />
+              <div>
+                <span className="text-sm font-semibold text-pure-black">Image</span>
+                <label className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-pure-line bg-pure-gray px-4 py-6 text-center transition hover:border-pure-green hover:bg-pure-mint/60">
+                  <ImagePlus className="h-8 w-8 text-pure-green" />
+                  <span className="mt-3 text-sm font-semibold text-pure-black">Choisir une image</span>
+                  <span className="mt-1 text-xs leading-5 text-pure-ink/60">
+                    JPG, PNG ou WebP. L'image est compressée automatiquement.
+                  </span>
+                  <input type="file" accept="image/*" onChange={handleImageFile} className="sr-only" />
+                </label>
+                <details className="mt-3 rounded-2xl border border-pure-line bg-white px-4 py-3">
+                  <summary className="cursor-pointer text-sm font-semibold text-pure-green">
+                    Option avancée: nom d'image ou URL
+                  </summary>
+                  <input
+                    value={form.image_url}
+                    onChange={(event) => updateForm("image_url", event.target.value)}
+                    placeholder="nom-local.jpeg ou https://..."
+                    className="mt-3 h-12 w-full rounded-2xl border border-pure-line px-4 text-sm outline-none transition focus:border-pure-green"
+                    required
+                  />
+                </details>
+              </div>
               <div className="overflow-hidden rounded-2xl border border-pure-line bg-pure-gray">
                 <img
                   key={form.image_url || "preview"}

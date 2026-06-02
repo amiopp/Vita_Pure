@@ -8,6 +8,6 @@ const imageModules = import.meta.glob("../assets/products/selected/*", {
 
 export function getProductImage(imageUrl) {
   if (!imageUrl) return logo;
-  if (/^(https?:\/\/|\/)/i.test(imageUrl)) return imageUrl;
+  if (/^(https?:\/\/|\/|data:image\/)/i.test(imageUrl)) return imageUrl;
   return imageModules[`../assets/products/selected/${imageUrl}`] || logo;
 }
