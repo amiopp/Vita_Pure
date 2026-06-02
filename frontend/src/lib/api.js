@@ -10,7 +10,23 @@ async function request(path, options = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
+    let message = `API error: ${response.status}`;
+    try {
+      const data = await response.json();
+      if (Array.isArray(data.detail)) {
+        message = data.detail
+          .map((item) => {
+            const field = item.loc?.filter((part) => part !== "body").join(".");
+            return field ? `${field}: ${item.msg}` : item.msg;
+          })
+          .join(" | ");
+      } else if (data.detail) {
+        message = data.detail;
+      }
+    } catch (err) {
+      // Keep the status-based message if the API did not return JSON.
+    }
+    throw new Error(message);
   }
 
   if (response.status === 204) {

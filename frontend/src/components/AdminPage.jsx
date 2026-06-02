@@ -186,11 +186,27 @@ export default function AdminPage() {
     setSuccess("");
   }
 
+  function getValidationMessage() {
+    if (form.name.trim().length < 2) return "Ajoutez le nom du produit.";
+    if (form.category.trim().length < 2) return "Choisissez une catégorie.";
+    if (form.description.trim().length < 5) return "Ajoutez une description courte.";
+    if (!form.price || Number(form.price) < 0) return "Ajoutez un prix valide.";
+    if (!form.image_url.trim()) return "Choisissez une image pour le produit.";
+    return "";
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
-    setSaving(true);
     setError("");
     setSuccess("");
+
+    const validationMessage = getValidationMessage();
+    if (validationMessage) {
+      setError(validationMessage);
+      return;
+    }
+
+    setSaving(true);
 
     const payload = {
       ...form,
@@ -209,7 +225,7 @@ export default function AdminPage() {
       resetForm();
       await loadProducts();
     } catch (err) {
-      setError("Impossible d'enregistrer ce produit. Vérifiez les champs et la clé admin.");
+      setError(`Impossible d'enregistrer ce produit. ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -330,12 +346,6 @@ export default function AdminPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <AdminInput label="Nom du produit" value={form.name} onChange={(value) => updateForm("name", value)} required />
-              <AdminInput
-                label="Slug"
-                value={form.slug}
-                onChange={(value) => updateForm("slug", value)}
-                placeholder="Automatique si vide"
-              />
               <label className="block">
                 <span className="text-sm font-semibold text-pure-black">Catégorie</span>
                 <input
@@ -389,10 +399,23 @@ export default function AdminPage() {
                     onChange={(event) => updateForm("image_url", event.target.value)}
                     placeholder="nom-local.jpeg ou https://..."
                     className="mt-3 h-12 w-full rounded-2xl border border-pure-line px-4 text-sm outline-none transition focus:border-pure-green"
-                    required
                   />
                 </details>
               </div>
+              <details className="rounded-2xl border border-pure-line bg-white px-4 py-3">
+                <summary className="cursor-pointer text-sm font-semibold text-pure-green">
+                  Option avancée: slug
+                </summary>
+                <p className="mt-2 text-xs leading-5 text-pure-ink/60">
+                  Le slug est généré automatiquement depuis le nom. Laissez ce champ vide sauf besoin spécial.
+                </p>
+                <input
+                  value={form.slug}
+                  onChange={(event) => updateForm("slug", event.target.value)}
+                  placeholder="Automatique si vide"
+                  className="mt-3 h-12 w-full rounded-2xl border border-pure-line px-4 text-sm outline-none transition focus:border-pure-green"
+                />
+              </details>
               <div className="overflow-hidden rounded-2xl border border-pure-line bg-pure-gray">
                 <img
                   key={form.image_url || "preview"}
