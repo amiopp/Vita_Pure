@@ -1,18 +1,8 @@
 import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import logo from "../assets/purevita-logo.jpg";
+import { getProductImage } from "../lib/productImages.js";
 import { getCartWhatsAppUrl } from "../lib/whatsapp.js";
-
-const imageModules = import.meta.glob("../assets/products/selected/*", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
-
-function getProductImage(fileName) {
-  return imageModules[`../assets/products/selected/${fileName}`] || logo;
-}
 
 const priceFormatter = new Intl.NumberFormat("fr-MA", {
   style: "currency",

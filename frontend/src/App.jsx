@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 
+import AdminPage from "./components/AdminPage.jsx";
 import About from "./components/About.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
 import Contact from "./components/Contact.jsx";
@@ -13,6 +14,14 @@ import ProductCatalog from "./components/ProductCatalog.jsx";
 import TrustSection from "./components/TrustSection.jsx";
 
 export default function App() {
+  if (window.location.pathname.startsWith("/admin")) {
+    return <AdminPage />;
+  }
+
+  return <Storefront />;
+}
+
+function Storefront() {
   const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
 

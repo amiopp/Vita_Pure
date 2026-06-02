@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import categories, orders, products
+from app.routes import admin, categories, orders, products
 from app.seed import seed_database
 
 load_dotenv()
@@ -35,6 +35,7 @@ app.add_middleware(
 app.include_router(products.router)
 app.include_router(categories.router)
 app.include_router(orders.router)
+app.include_router(admin.router)
 
 
 @app.get("/")

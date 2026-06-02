@@ -179,10 +179,7 @@ def seed_database() -> None:
     try:
         for item in PRODUCTS:
             product = db.query(Product).filter(Product.slug == item["slug"]).first()
-            if product:
-                for key, value in item.items():
-                    setattr(product, key, value)
-            else:
+            if not product:
                 db.add(Product(**item))
         db.commit()
     finally:
@@ -192,4 +189,3 @@ def seed_database() -> None:
 if __name__ == "__main__":
     seed_database()
     print("PUREVITA products seeded.")
-

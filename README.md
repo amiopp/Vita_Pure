@@ -58,6 +58,28 @@ Frontend runs at `http://localhost:5173`.
 - `GET /api/categories`
 - `POST /api/orders/whatsapp-link`
 - `POST /api/orders/whatsapp-cart-link`
+- `GET /api/admin/products`
+- `POST /api/admin/products`
+- `PUT /api/admin/products/{product_id}`
+- `DELETE /api/admin/products/{product_id}`
+
+Admin endpoints require the `X-Admin-Key` header matching `ADMIN_API_KEY`.
+
+## Admin Page
+
+Open:
+
+```txt
+https://your-site.netlify.app/admin
+```
+
+Enter the admin key configured in Render:
+
+```txt
+ADMIN_API_KEY=your-secure-admin-key
+```
+
+The admin page lets you add, edit, search, delete, mark stock availability, and feature products. For new product images, use either an existing bundled image filename or an external image URL.
 
 ## Product Editing
 

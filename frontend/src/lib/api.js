@@ -13,6 +13,10 @@ async function request(path, options = {}) {
     throw new Error(`API error: ${response.status}`);
   }
 
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 }
 
@@ -45,5 +49,40 @@ export function createWhatsAppCartOrderLink(items, customerName = "", address = 
       customer_name: customerName,
       address,
     }),
+  });
+}
+
+function adminHeaders(adminKey) {
+  return {
+    "X-Admin-Key": adminKey,
+  };
+}
+
+export function getAdminProducts(adminKey) {
+  return request("/api/admin/products", {
+    headers: adminHeaders(adminKey),
+  });
+}
+
+export function createAdminProduct(adminKey, product) {
+  return request("/api/admin/products", {
+    method: "POST",
+    headers: adminHeaders(adminKey),
+    body: JSON.stringify(product),
+  });
+}
+
+export function updateAdminProduct(adminKey, productId, product) {
+  return request(`/api/admin/products/${productId}`, {
+    method: "PUT",
+    headers: adminHeaders(adminKey),
+    body: JSON.stringify(product),
+  });
+}
+
+export function deleteAdminProduct(adminKey, productId) {
+  return request(`/api/admin/products/${productId}`, {
+    method: "DELETE",
+    headers: adminHeaders(adminKey),
   });
 }
